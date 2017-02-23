@@ -60,25 +60,25 @@ def makeYqlQuery(req):
 def makeWebhookResult(data):
     query = data.get('query')
     if query is None:
-        return {}
+        return error_message('query')
 
     result = query.get('results')
     if result is None:
-        return {}
+        return error_message('results')
 
     channel = result.get('channel')
     if channel is None:
-        return {}
+        return error_message('channel')
 
     item = channel.get('item')
     location = channel.get('location')
     units = channel.get('units')
     if (location is None) or (item is None) or (units is None):
-        return {}
+        return error_message('location')
 
     condition = item.get('condition')
     if condition is None:
-        return {}
+        return error_message('condition')
 
     # print(json.dumps(item, indent=4))
 
@@ -131,6 +131,9 @@ def makeWebhookResult(data):
         # "contextOut": [],
         "source": "apiai-weather-webhook-sample"
     }
+
+def error_message(error_string):
+    return json.dumps({"text": 'fail ' + str(error_string)})
 
 
 if __name__ == '__main__':
